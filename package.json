@@ -1,0 +1,27 @@
+{
+  "name": "campzimmer-node",
+  "version": "1.0.0",
+  "description": "The Campzimmer Node library provides convenient access to the Campzimmer API from applications written in server-side JavaScript.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/campzimmer/campzimmer-node.git"
+  },
+  "keywords": [
+    "campzimmer",
+    "campzimmer",
+    "api",
+    "camping",
+    "campgrounds",
+    "nodejs"
+  ],
+  "author": "Campzimmer, Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/campzimmer/campzimmer-node/issues"
+  },
+  "homepage": "https://github.com/campzimmer/campzimmer-node#readme"
+}
