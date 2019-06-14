@@ -21,7 +21,7 @@ Install the package with:
 ## Usage
 
 The package needs to be configured with your account's secret key which is
-available in your [Campzimmer Dashboard][api-keys]. Require it with the key's
+available in your [Campzimmer Dashboard](https://dashboard.campzimmer.com). Require it with the key's
 value:
 
 ```js
