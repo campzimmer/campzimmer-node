@@ -23,6 +23,9 @@ Campzimmer.INITIAL_NETWORK_RETRY_DELAY_SEC = 0.5;
 
 const APP_INFO_PROPERTIES = ['name', 'version', 'url', 'partner_id'];
 
+Campzimmer.CampzimmerResouce = require('../lib/CampzimmerResource');
+Campzimmer.resources = resources;
+
 function Campzimmer(key) {
   if (!(this instanceof Campzimmer)) {
     return new Campzimmer(key);
@@ -36,10 +39,10 @@ function Campzimmer(key) {
     package_version: Campzimmer.PACKAGE_VERSION,
   };
 
+  this._prepResoures();
+
   this.setApiKey(key);
   this.setBasePath(Campzimmer.DEFAULT_HOST);
-
-  this._prepResoures();
 }
 
 Campzimmer.prototype.setHost = function(host, port, protocol) {
@@ -143,6 +146,7 @@ Campzimmer.prototype.setBasePath = function(path) {
 
 Campzimmer.prototype._prepResoures = function() {
   for (const name in resources) {
+    console.log(name);
     this[util.capToLowerName(name)] = new resources[name](this);
   }
 };

@@ -221,8 +221,8 @@ describe('Campzimmer Module', function() {
       it('Will call a callback if successful', () =>
         expect(
           new Promise((resolve, reject) => {
-            campzimmer.campsites.getThreeSixty(CUSTOMER_DETAILS, (err, customer) => {
-              cleanup.deleteCustomer(customer.id);
+            campzimmer.campsites.getThreeSixty(CAMPSITE_DETAILS, (err, customer) => {
+              // cleanup.deleteCustomer(customer.id);
               resolve('Called!');
             });
           })
@@ -231,8 +231,8 @@ describe('Campzimmer Module', function() {
       it('Will expose HTTP response object', () =>
         expect(
           new Promise((resolve, reject) => {
-            campzimmer.customers.create(CUSTOMER_DETAILS, (err, customer) => {
-              cleanup.deleteCustomer(customer.id);
+            campzimmer.customers.create(CAMPSITE_DETAILS, (err, customer) => {
+              // cleanup.deleteCustomer(customer.id);
 
               const headers = customer.lastResponse.headers;
               expect(headers).to.contain.keys('request-id');
