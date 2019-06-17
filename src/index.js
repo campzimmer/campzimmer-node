@@ -5,21 +5,41 @@ const util = require('../lib/util');
 
 Campzimmer.DEFAULT_HOST = 'https://api.campzimmer.com/public';
 Campzimmer.PACKAGE_VERSION = require('../package.json').version;
+Campzimmer.USER_AGENT = '';
+Campzimmer.DEFAULT_TIMEOUT = require('http').createServer().timeout;
+
+Campzimmer.USER_AGENT = {
+  bindings_version: Campzimmer.PACKAGE_VERSION,
+  lang: 'node',
+  lang_version: process.version,
+  platform: process.platform,
+  publisher: 'campzimmer',
+  uname: null,
+};
+
+Campzimmer.USER_AGENT_SERIALIZED = null;
+Campzimmer.MAX_NETWORK_RETRY_DELAY_SEC = 2;
+Campzimmer.INITIAL_NETWORK_RETRY_DELAY_SEC = 0.5;
+
+const APP_INFO_PROPERTIES = ['name', 'version', 'url', 'partner_id'];
 
 function Campzimmer(key) {
   if (!(this instanceof Campzimmer)) {
-    return new Stripe(key);
+    return new Campzimmer(key);
   }
 
   this._api = {
     auth: null,
-    host: Stripe.DEFAULT_HOST,
+    host: Campzimmer.DEFAULT_HOST,
     basePath: '',
-    package_version: Campzimmer.PACKAGE_VERSION
+    timeout: Campzimmer.DEFAULT_TIMEOUT,
+    package_version: Campzimmer.PACKAGE_VERSION,
   };
 
   this.setApiKey(key);
-  this.setBasePath(DEFAULT_HOST);
+  this.setBasePath(Campzimmer.DEFAULT_HOST);
+
+  this._prepResoures();
 }
 
 Campzimmer.prototype.setHost = function(host, port, protocol) {
@@ -53,9 +73,10 @@ Campzimmer.prototype.setApiKey = function(key) {
 };
 
 Campzimmer.prototype.setTimeout = function(timeout) {
+  console.log("KMK Debugger", timeout);
   this._setApiField(
     'timeout',
-    timeout == null ? Stripe.DEFAULT_TIMEOUT : timeout
+    timeout == null ? Campzimmer.DEFAULT_TIMEOUT : timeout
   );
 };
 
@@ -81,7 +102,7 @@ Campzimmer.prototype.setAppInfo = function(info) {
   }, undefined);
 
   // Kill the cached UA string because it may no longer be valid
-  Stripe.USER_AGENT_SERIALIZED = undefined;
+  Campzimmer.USER_AGENT_SERIALIZED = undefined;
 
   this._appInfo = appInfo;
 };
@@ -90,29 +111,35 @@ Campzimmer.prototype.setHttpAgent = function(agent) {
   this._setApiField('agent', agent);
 };
 
+Campzimmer.prototype.getApiField = function(field){
+  if(field){
+    return this._api[field];
+  }
+}
+
 Campzimmer.prototype._setApiField = function(key, value) {
   this._api[key] = value;
 };
 
-Campzimmer.prototype.setApiKey = function(key){
+Campzimmer.prototype.setApiKey = function(key) {
   if (key) {
-    this._api['auth'] = `Bearer ${key}`;
+    this._api.auth = `Bearer ${key}`;
   } else {
     throw new Error('You must set a valid secret');
   }
-}
+};
 
-Campzimmer.prototype.getApiKey = function(){
+Campzimmer.prototype.getApiKey = function() {
   return this._api.auth;
-}
+};
 
-Campzimmer.prototype.getBasePath = function(){
+Campzimmer.prototype.getBasePath = function() {
   return this._api.basePath;
-}
+};
 
-Campzimmer.prototype.setBasePath = function(path){
+Campzimmer.prototype.setBasePath = function(path) {
   this._api.basePath = path;
-}
+};
 
 Campzimmer.prototype._prepResoures = function() {
   for (const name in resources) {
@@ -129,8 +156,8 @@ Campzimmer.prototype.getClientId = function() {
 };
 
 // Get a global constant
-Campzimmer.prototype.getConstant = function(c){
-  return Stripe[c];
+Campzimmer.prototype.getConstant = function(c) {
+  return Campzimmer[c];
 };
 
 Campzimmer.prototype.getMaxNetworkRetries = function() {
@@ -159,19 +186,19 @@ Campzimmer.prototype.getInitialNetworkRetryDelay = function() {
 // Gets a JSON version of a User-Agent and uses a cached version for a slight
 // speed advantage.
 Campzimmer.prototype.getClientUserAgent = function(cb) {
-  if (Stripe.USER_AGENT_SERIALIZED) {
-    return cb(Stripe.USER_AGENT_SERIALIZED);
+  if (Campzimmer.USER_AGENT_SERIALIZED) {
+    return cb(Campzimmer.USER_AGENT_SERIALIZED);
   }
-  this.getClientUserAgentSeeded(Stripe.USER_AGENT, (cua) => {
-    Stripe.USER_AGENT_SERIALIZED = cua;
-    cb(Stripe.USER_AGENT_SERIALIZED);
+  this.getClientUserAgentSeeded(Campzimmer.USER_AGENT, (cua) => {
+    Campzimmer.USER_AGENT_SERIALIZED = cua;
+    cb(Campzimmer.USER_AGENT_SERIALIZED);
   });
-},
+};
 
 // Gets a JSON version of a User-Agent by encoding a seeded object and
 // fetching a uname from the system.
 Campzimmer.prototype.getClientUserAgentSeeded = function(seed, cb) {
-  utils.safeExec('uname -a', (err, uname) => {
+  util.safeExec('uname -a', (err, uname) => {
     const userAgent = {};
     for (const field in seed) {
       userAgent[field] = encodeURIComponent(seed[field]);
@@ -186,7 +213,7 @@ Campzimmer.prototype.getClientUserAgentSeeded = function(seed, cb) {
 
     cb(JSON.stringify(userAgent));
   });
-},
+};
 
 Campzimmer.prototype.getAppInfoAsString = function() {
   if (!this._appInfo) {
@@ -204,7 +231,7 @@ Campzimmer.prototype.getAppInfoAsString = function() {
   }
 
   return formatted;
-}
+};
 
 module.exports = Campzimmer;
 // expose constructor as a named property to enable mocking with Sinon.JS
