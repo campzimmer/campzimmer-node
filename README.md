@@ -32,6 +32,6 @@ Or using ES modules, this looks more like:
 
 ```js
 import Campzimmer from 'campzimmer-node';
-const campzimmer = Stripe('<secret_key>');
+const campzimmer = Campzimmer('<secret_key>');
 //…
 ```
