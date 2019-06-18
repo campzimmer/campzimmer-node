@@ -3,8 +3,10 @@
 const resources = require('../lib/resource');
 const util = require('../lib/util');
 
-Campzimmer.DEFAULT_HOST = 'https://api.campzimmer.com/public';
+Campzimmer.DEFAULT_HOST = 'api.campzimmer.com';
+Campzimmer.DEFAULT_PORT = '443';
 Campzimmer.PACKAGE_VERSION = require('../package.json').version;
+Campzimmer.DEFAULT_BASE_PATH = '/public/v1/';
 Campzimmer.USER_AGENT = '';
 Campzimmer.DEFAULT_TIMEOUT = require('http').createServer().timeout;
 
@@ -26,6 +28,8 @@ const APP_INFO_PROPERTIES = ['name', 'version', 'url', 'partner_id'];
 Campzimmer.CampzimmerResouce = require('../lib/CampzimmerResource');
 Campzimmer.resources = resources;
 
+Campzimmer.errors = require('../lib/Error');
+
 function Campzimmer(key) {
   if (!(this instanceof Campzimmer)) {
     return new Campzimmer(key);
@@ -34,9 +38,11 @@ function Campzimmer(key) {
   this._api = {
     auth: null,
     host: Campzimmer.DEFAULT_HOST,
-    basePath: '',
+    port: Campzimmer.DEFAULT_PORT,
+    basePath: Campzimmer.DEFAULT_BASE_PATH,
     timeout: Campzimmer.DEFAULT_TIMEOUT,
     package_version: Campzimmer.PACKAGE_VERSION,
+    agent: null
   };
 
   this._prepResoures();
@@ -76,7 +82,6 @@ Campzimmer.prototype.setApiKey = function(key) {
 };
 
 Campzimmer.prototype.setTimeout = function(timeout) {
-  console.log("KMK Debugger", timeout);
   this._setApiField(
     'timeout',
     timeout == null ? Campzimmer.DEFAULT_TIMEOUT : timeout
@@ -146,7 +151,6 @@ Campzimmer.prototype.setBasePath = function(path) {
 
 Campzimmer.prototype._prepResoures = function() {
   for (const name in resources) {
-    console.log(name);
     this[util.capToLowerName(name)] = new resources[name](this);
   }
 };

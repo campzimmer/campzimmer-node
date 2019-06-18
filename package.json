@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rollup --config",
     "mocha": "nyc mocha",
+    "test-debug": "mocha --inspect-brk",
     "test": "npm run mocha --debug",
     "lint-test": "npm run lint && npm run mocha",
     "lint": "eslint --ext .js, ."

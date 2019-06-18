@@ -8,9 +8,8 @@ const http = require('http');
 
 const expect = require('chai').expect;
 
-const CAMPSITE_DETAILS = {
-  site_id: '12345'
-};
+const CAMPSITE_ID = '12345'
+
 
 describe('Campzimmer Module', function() {
   const cleanup = new testUtils.CleanupUtility();
@@ -221,7 +220,7 @@ describe('Campzimmer Module', function() {
       it('Will call a callback if successful', () =>
         expect(
           new Promise((resolve, reject) => {
-            campzimmer.campsites.getThreeSixty(CAMPSITE_DETAILS, (err, customer) => {
+            campzimmer.campsites.getThreeSixty(CAMPSITE_ID, (err, customer) => {
               // cleanup.deleteCustomer(customer.id);
               resolve('Called!');
             });
@@ -231,14 +230,14 @@ describe('Campzimmer Module', function() {
       it('Will expose HTTP response object', () =>
         expect(
           new Promise((resolve, reject) => {
-            campzimmer.customers.create(CAMPSITE_DETAILS, (err, customer) => {
+            campzimmer.campsites.getThreeSixty(CAMPSITE_ID, (err, campsite) => {
               // cleanup.deleteCustomer(customer.id);
 
-              const headers = customer.lastResponse.headers;
+              const headers = campsite.lastResponse.headers;
               expect(headers).to.contain.keys('request-id');
-
-              expect(customer.lastResponse.requestId).to.match(/^req_/);
-              expect(customer.lastResponse.statusCode).to.equal(200);
+       
+              // expect(campsite.lastResponse.requestId).to.match(/^req_/);
+              expect(campsite.lastResponse.statusCode).to.equal(200);
 
               resolve('Called!');
             });
@@ -248,10 +247,10 @@ describe('Campzimmer Module', function() {
       it('Given an error the callback will receive it', () =>
         expect(
           new Promise((resolve, reject) => {
-            campzimmer.customers.createSource(
-              'nonExistentCustId',
-              {card: {}},
-              (err, customer) => {
+            campzimmer.campsites.reserve(
+              'nonExistentCampsiteId',
+              {reservation: {}},
+              (err, reservation) => {
                 if (err) {
                   resolve('ErrorWasPassed');
                 } else {
@@ -266,7 +265,7 @@ describe('Campzimmer Module', function() {
 
   describe('errors', () => {
     it('Exports errors as types', () => {
-      const campzimmer = require('../lib/campzimmer');
+      const campzimmer = require('../src/index');
       expect(
         new campzimmer.errors.StripeInvalidRequestError({
           message: 'error',

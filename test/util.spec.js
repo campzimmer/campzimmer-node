@@ -165,8 +165,8 @@ describe('util', () => {
         },
         (message) => {
           expect(message).to.equal(
-            'Stripe: Options found in arguments (api_key, idempotency_key).' +
-              ' Did you mean to pass an options object? See https://github.com/stripe/stripe-node/wiki/Passing-Options.'
+            'Campzimmer: Options found in arguments (api_key).' +
+              ' Did you mean to pass an options object? See https://github.com/campzimmer/campzimmer-node/wiki/Passing-Options.'
           );
 
           done();
@@ -204,60 +204,56 @@ describe('util', () => {
       expect(args.length).to.equal(1);
     });
     it('parses an api key', () => {
-      const args = ['sk_test_iiiiiiiiiiiiiiiiiiiiiiii'];
+      const args = ['campzimmer-test-key-for-test'];
       expect(util.getOptionsFromArgs(args)).to.deep.equal({
-        auth: 'sk_test_iiiiiiiiiiiiiiiiiiiiiiii',
+        auth: 'campzimmer-test-key-for-test',
         headers: {},
       });
       expect(args.length).to.equal(0);
     });
-    it('parses an idempotency key', () => {
-      const args = [{foo: 'bar'}, {idempotency_key: 'foo'}];
-      expect(util.getOptionsFromArgs(args)).to.deep.equal({
-        auth: null,
-        headers: {'Idempotency-Key': 'foo'},
-      });
-      expect(args.length).to.equal(1);
-    });
+    // it('parses an idempotency key', () => {
+    //   const args = [{foo: 'bar'}, {idempotency_key: 'foo'}];
+    //   expect(util.getOptionsFromArgs(args)).to.deep.equal({
+    //     auth: null,
+    //     headers: {'Idempotency-Key': 'foo'},
+    //   });
+    //   expect(args.length).to.equal(1);
+    // });
     it('parses an api version', () => {
-      const args = [{foo: 'bar'}, {stripe_version: '2003-03-30'}];
+      const args = [{foo: 'bar'}, {campzimmer_version: '2003-03-30'}];
       expect(util.getOptionsFromArgs(args)).to.deep.equal({
         auth: null,
-        headers: {'Stripe-Version': '2003-03-30'},
+        headers: {'Campzimmer-Version': '2003-03-30'},
       });
       expect(args.length).to.equal(1);
     });
-    it('parses an idempotency key and api key and api version (with data)', () => {
+    it('api key and api version (with data)', () => {
       const args = [
         {foo: 'bar'},
         {
-          api_key: 'sk_test_iiiiiiiiiiiiiiiiiiiiiiii',
-          idempotency_key: 'foo',
-          stripe_version: '2010-01-10',
+          api_key: 'campzimmer-test-key-for-test',
+          campzimmer_version: '2010-01-10',
         },
       ];
       expect(util.getOptionsFromArgs(args)).to.deep.equal({
-        auth: 'sk_test_iiiiiiiiiiiiiiiiiiiiiiii',
+        auth: 'campzimmer-test-key-for-test',
         headers: {
-          'Idempotency-Key': 'foo',
-          'Stripe-Version': '2010-01-10',
+          'Campzimmer-Version': '2010-01-10',
         },
       });
       expect(args.length).to.equal(1);
     });
-    it('parses an idempotency key and api key and api version', () => {
+    it('parses an api key and api version', () => {
       const args = [
         {
-          api_key: 'sk_test_iiiiiiiiiiiiiiiiiiiiiiii',
-          idempotency_key: 'foo',
-          stripe_version: 'hunter2',
+          api_key: 'campzimmer-test-key-for-test',
+          campzimmer_version: 'hunter2',
         },
       ];
       expect(util.getOptionsFromArgs(args)).to.deep.equal({
-        auth: 'sk_test_iiiiiiiiiiiiiiiiiiiiiiii',
+        auth: 'campzimmer-test-key-for-test',
         headers: {
-          'Idempotency-Key': 'foo',
-          'Stripe-Version': 'hunter2',
+          'Campzimmer-Version': 'hunter2',
         },
       });
       expect(args.length).to.equal(0);
@@ -266,11 +262,10 @@ describe('util', () => {
       const args = [
         {foo: 'bar'},
         {
-          api_key: 'sk_test_iiiiiiiiiiiiiiiiiiiiiiii',
-          idempotency_key: 'foo',
-          stripe_version: '2010-01-10',
-          fishsticks: true,
-          custard: true,
+          api_key: 'campzimmer-test-key-for-test',
+          campzimmer_version: '2010-01-10',
+          fartbites: true,
+          chipotle: true,
         },
       ];
 
@@ -280,7 +275,7 @@ describe('util', () => {
         },
         (message) => {
           expect(message).to.equal(
-            'Stripe: Invalid options found (fishsticks, custard); ignoring.'
+            'Campzimmer: Invalid options found (fartbites, chipotle); ignoring.'
           );
 
           done();
@@ -305,10 +300,10 @@ describe('util', () => {
     });
   });
 
-  describe('removeEmpty', () => {
+  describe('removeEmptyProperties', () => {
     it('removes empty properties and leaves non-empty ones', () => {
       expect(
-        util.removeEmpty({
+        util.removeEmptyProperties({
           cat: 3,
           dog: false,
           rabbit: undefined,
@@ -322,7 +317,7 @@ describe('util', () => {
 
     it('throws an error if not given two things to compare', () => {
       expect(() => {
-        util.removeEmpty('potato');
+        util.removeEmptyProperties('potato');
       }).to.throw();
     });
   });
