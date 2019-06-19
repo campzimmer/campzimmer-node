@@ -2,7 +2,7 @@
   "name": "campzimmer-node",
   "version": "1.0.0",
   "description": "The Campzimmer Node library provides convenient access to the Campzimmer API from applications written in server-side JavaScript.",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "rollup --config",
     "mocha": "nyc mocha",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/campzimmer/campzimmer-node#readme",
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "eslint": "^5.16.0",
@@ -44,7 +44,7 @@
     "nock": "^10.0.6",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
-    "rollup": "^1.15.5",
+    "rollup": "^1.15.6",
     "safe-buffer": "^5.1.2"
   }
 }
