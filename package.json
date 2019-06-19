@@ -46,5 +46,11 @@
     "prettier": "^1.18.2",
     "rollup": "^1.15.6",
     "safe-buffer": "^5.1.2"
+  },
+  "dependencies": {
+    "lodash.isplainobject": "^4.0.6",
+    "qs": "^6.6.0",
+    "safe-buffer": "^5.1.1",
+    "uuid": "^3.3.2"
   }
 }
