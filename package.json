@@ -1,6 +1,6 @@
 {
   "name": "campzimmer-node",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "The Campzimmer Node library provides convenient access to the Campzimmer API from applications written in server-side JavaScript.",
   "main": "src/index.js",
   "scripts": {
