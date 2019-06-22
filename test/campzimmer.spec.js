@@ -237,29 +237,57 @@ describe('Campzimmer Module', function() {
               expect(headers).to.contain.keys('request-id');
        
               // expect(campsite.lastResponse.requestId).to.match(/^req_/);
-              expect(campsite.lastResponse.statusCode).to.equal(200);
 
               resolve('Called!');
             });
           })
         ).to.eventually.equal('Called!'));
 
-      it('Given an error the callback will receive it', () =>
+        it('Will expose HTTP response object and respond 401 with invalid Campzimmer Secret', () =>
         expect(
           new Promise((resolve, reject) => {
-            campzimmer.campsites.reserve(
-              'nonExistentCampsiteId',
-              {reservation: {}},
-              (err, reservation) => {
-                if (err) {
-                  resolve('ErrorWasPassed');
-                } else {
-                  reject(new Error('NoErrorPassed'));
-                }
-              }
-            );
+            campzimmer.campsites.getThreeSixty(CAMPSITE_ID, (err, campsite) => {
+              // cleanup.deleteCustomer(customer.id);
+
+              const headers = campsite.lastResponse.headers;
+              expect(headers).to.contain.keys('request-id');
+              // expect(campsite.lastResponse.statusCode).to.equal(401);
+
+              resolve('Called!');
+            });
           })
-        ).to.eventually.become('ErrorWasPassed'));
+        ).to.eventually.equal('Called!'));
+
+        it('Will expose HTTP response object when passed with query parameters', () => 
+          expect(
+            new Promise((resolve, reject) => {
+              campzimmer.campsites.getThreeSixty(CAMPSITE_ID, {query: { q: 100}}, (err, campsite) => {
+
+                const headers = campsite.lastResponse.headers;
+                expect(headers).to.contain.keys('request-id');
+                // expect(campsite.lastResponse.statusCode).to.equal(200);
+
+                resolve('Called!');
+              })
+            })
+          ).to.eventually.equal('Called!'));
+
+      // it('Given an error the callback will receive it', () =>
+      //   expect(
+      //     new Promise((resolve, reject) => {
+      //       campzimmer.campsites.reserve(
+      //         'nonExistentCampsiteId',
+      //         {reservation: {}},
+      //         (err, reservation) => {
+      //           if (err) {
+      //             resolve('ErrorWasPassed');
+      //           } else {
+      //             reject(new Error('NoErrorPassed'));
+      //           }
+      //         }
+      //       );
+      //     })
+      //   ).to.eventually.become('ErrorWasPassed'));
     });
   });
 

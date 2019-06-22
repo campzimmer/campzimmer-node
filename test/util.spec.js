@@ -32,6 +32,33 @@ describe('util', () => {
     });
   });
 
+  describe('isValidatedQueryObject', () => {
+    it('returns false when a passed parameter is valid', () => {
+      expect(
+        util.isValidatedQueryObject({
+          q: '100',
+          blurred: false
+        },
+        ['q'])).to.equal(false);
+    });
+    
+    it('returns true when all passed parameters are valid', () => {
+      expect(util.isValidatedQueryObject({
+        q: '100', 
+        blurred: true,
+        banana: 'clean',
+        activityList: ['yeah', 'cool', 'rad']
+      }, ['q', 'blurred', 'banana', 'activityList'])).to.equal(true);
+    })
+
+    it('returns true when all passed parameters are valid, but all values were not used', () => {
+      expect(util.isValidatedQueryObject({
+        q: '100', 
+        blurred: true
+      }, ['q', 'blurred', 'banana', 'activityList'])).to.equal(true);
+    });
+  });
+
   describe('stringifyRequestData', () => {
     it('Handles basic types', () => {
       expect(
